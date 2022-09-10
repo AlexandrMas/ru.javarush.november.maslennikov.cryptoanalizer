@@ -7,20 +7,22 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Menu {
-    static String menu = "Enter the number corresponding to the menu item:\n" +
-            "1.  Encrypt the text using the \"Caesar cipher\" in Russian;\n" +
-            "2.  Encrypt the text using the \"Caesar cipher\" in English;\n" +
-            "3.  Encrypt the text using the \"Caesar cipher\" in Ukrainian;\n" +
-            "4.  Encrypt the text using the \"Caesar cipher\" in the language suggested by the user;\n" +
-            "5.  Decrypt the text in Russian using the \"Caesar cipher\" key;\n" +
-            "6.  Decrypt the text in English using the \"Caesar cipher\" key;\n" +
-            "7.  Decrypt the text in Ukrainian using the key of the \"Caesar cipher\";\n" +
-            "8.  Decrypt the text in the language suggested by the user using the \"Caesar cipher\" key;\n" +
-            "9.  Decrypt the text in Russian, without using a key;\n" +
-            "10. Decrypt the text in English, without using a key;\n" +
-            "11. Decrypt the text in Ukrainian, without using a key;\n" +
-            "12. Decrypt the text in the language suggested by the user, without using a key;\n" +
-            "13. Exiting the program.\n";
+    static String menu = """
+            Enter the number corresponding to the menu item:
+            1.  Encrypt the text using the "Caesar cipher" in Russian;
+            2.  Encrypt the text using the "Caesar cipher" in English;
+            3.  Encrypt the text using the "Caesar cipher" in Ukrainian;
+            4.  Encrypt the text using the "Caesar cipher" in the language suggested by the user;
+            5.  Decrypt the text in Russian using the "Caesar cipher" key;
+            6.  Decrypt the text in English using the "Caesar cipher" key;
+            7.  Decrypt the text in Ukrainian using the key of the "Caesar cipher";
+            8.  Decrypt the text in the language suggested by the user using the "Caesar cipher" key;
+            9.  Decrypt the text in Russian, without using a key;
+            10. Decrypt the text in English, without using a key;
+            11. Decrypt the text in Ukrainian, without using a key;
+            12. Decrypt the text in the language suggested by the user, without using a key;
+            13. Exit.
+            """;
     static String inNumber = "Enter the number corresponding to the menu item.";
 
     static String inPathEncrypt = "Enter the path to the file whose text you want to encrypt:";
@@ -43,7 +45,110 @@ public class Menu {
 
     static String decryptFinish = "The text is decrypted, written to a file with the name decryptedFile.txt\n";
 
+    public Menu() throws IOException {
+        while (true) {
+            System.out.println(menu);
 
+            int menu = Menu.setMenu();
+
+            if (menu == 1) {
+                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getRU(), Menu.setKey());
+                System.out.println(startEncrypt);
+                System.out.println(encryptFinish);
+            }
+
+            if (menu == 2) {
+                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getEN(), Menu.setKey());
+                System.out.println(startEncrypt);
+                System.out.println(encryptFinish);
+            }
+
+            if (menu == 3) {
+                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getUA(), Menu.setKey());
+                System.out.println(startEncrypt);
+                System.out.println(encryptFinish);
+            }
+
+            if (menu == 4) {
+                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().universal(Menu.settAbc()), Menu.setKey());
+                System.out.println(startEncrypt);
+                System.out.println(encryptFinish);
+            }
+
+            if (menu == 5) {
+                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getRU(), Menu.setKey());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+
+            if (menu == 6) {
+                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getEN(), Menu.setKey());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+
+            if (menu == 7) {
+                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getUA(), Menu.setKey());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+            if (menu == 8) {
+                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().universal(Menu.settAbc()), Menu.setKey());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+
+
+            if (menu == 9) {
+                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getRU());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+
+            if (menu == 10) {
+                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getEN());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+
+            if (menu == 11) {
+                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getUA());
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+            if (menu == 12) {
+                Decrypt.decryptBruteForce(Menu.settFileDecrypted(),
+                        new ABC().universal(Menu.settAbc()));
+                System.out.println(startDecrypt);
+                System.out.println(decryptFinish);
+            }
+            if (menu == 13) {
+                break;
+            }
+        }
+    }
+    public static String settAbc() {
+        Scanner console = new Scanner(System.in);
+        String fileText;
+        while (true) {
+            System.out.println(inAbc);
+            fileText = console.nextLine();
+            if (!Files.isRegularFile(Path.of(fileText))) {
+                System.out.println(fallPath);
+            } else {
+                break;
+            }
+        }
+        return fileText;
+    }
     public static String settFileEncrypted() {
         Scanner console = new Scanner(System.in);
         String fileText;
@@ -73,7 +178,6 @@ public class Menu {
         }
         return fileText;
     }
-
 
     public static int setKey() {
         Scanner console = new Scanner(System.in);
@@ -113,80 +217,6 @@ public class Menu {
             }
         }
         return menu;
-    }
-
-    public static String settAbc() {
-        Scanner console = new Scanner(System.in);
-        String fileText;
-        while (true) {
-            System.out.println(inAbc);
-            fileText = console.nextLine();
-            if (!Files.isRegularFile(Path.of(fileText))) {
-                System.out.println(fallPath);
-            } else {
-                break;
-            }
-        }
-        return fileText;
-    }
-
-    public Menu() throws IOException {
-        while (true) {
-            System.out.println(menu);
-
-            int menu = Menu.setMenu();
-
-            if (menu == 1) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(), new ABC().getRU(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 2) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(), new ABC().getEN(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 3) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(), new ABC().getUA(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 4) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(), new ABC().universal(Menu.settAbc()), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 5) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(), new ABC().getRU(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 6) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(), new ABC().getEN(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 7) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(), new ABC().getUA(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-            if (menu == 8) {
-                Encrypt.encryptCaesar(Menu.settFileDecrypted(), new ABC().universal(Menu.settAbc()), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if(menu == 13){
-                break;
-            }
-        }
     }
 }
 

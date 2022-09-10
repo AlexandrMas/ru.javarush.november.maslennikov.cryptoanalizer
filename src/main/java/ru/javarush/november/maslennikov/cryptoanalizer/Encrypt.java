@@ -8,7 +8,7 @@ public class Encrypt {
     private Encrypt() {
     }
 
-    static void encryptCaesar(String file, List abc, int key) throws IOException {
+    static void encryptCaesar(String file, List<Character> abc, int key) throws IOException {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter("encryptedFile.txt"))) {
@@ -20,7 +20,7 @@ public class Encrypt {
                     char c = arrayChar[i];
                     if (abc.contains(c)) {
                         int index = (abc.indexOf(c) + key) % abc.size();
-                        arrayChar[i] = (char) abc.get(index);
+                        arrayChar[i] = abc.get(index);
                     } else {
                         arrayChar[i] = c;
                     }

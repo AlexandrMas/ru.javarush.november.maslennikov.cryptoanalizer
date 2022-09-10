@@ -6,6 +6,5 @@ public class Cryptanalytical {
     public static void main(String[] args) throws IOException {
 
         new Menu();
-
     }
 }

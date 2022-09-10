@@ -1,6 +1,7 @@
 package ru.javarush.november.maslennikov.cryptoanalizer;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class Decrypt {
@@ -8,7 +9,7 @@ public class Decrypt {
     private Decrypt() {
     }
 
-    static void decryptCaesar(String file, List abc, int key) throws IOException {
+    static void decryptCaesar(String file, List<Character> abc, int key) throws IOException {
 
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
@@ -20,7 +21,7 @@ public class Decrypt {
                 for (int i = 0; i < arrayChar.length; i++) {
                     char c = arrayChar[i];
                     if (abc.contains(c)) {
-                        arrayChar[i] = (char) abc.get((abc.size() + abc.indexOf(c) - key) % abc.size());
+                        arrayChar[i] = abc.get((abc.size() + abc.indexOf(c) - key) % abc.size());
                     } else {
                         arrayChar[i] = c;
                     }
@@ -30,4 +31,41 @@ public class Decrypt {
             }
         }
     }
+
+    static void decryptBruteForce(String file, List<Character> abc) throws IOException {
+        int length1;
+        int length2;
+        int result;
+        int key;
+
+        for (int i = 0; ; i++) {
+            Decrypt.decryptCaesar(file, abc, i);
+            try (BufferedReader read = new BufferedReader(new FileReader("decryptedFile.txt"));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter("temple.txt"))) {
+                String lineE = "";
+                int countString = 30;
+                while (countString > 0 || (lineE = read.readLine()) != null) {
+                    writer.write(lineE);
+                    countString--;
+                }
+            }
+            try (BufferedReader read = new BufferedReader(new FileReader("temple.txt"))) {
+                String readLine = read.readLine();
+                String[] arrayString = readLine.split("\\. ");
+                String line = Arrays.toString(arrayString);
+                String[] arrayString1 = line.split(", ");
+                length1 = arrayString.length;
+                length2 = arrayString1.length;
+            }
+            result = length1 + length2;
+            if (result > 5) {
+                key = i;
+                break;
+            }
+        }
+        Decrypt.decryptCaesar(file, abc, key);
+    }
 }
+
+
+
