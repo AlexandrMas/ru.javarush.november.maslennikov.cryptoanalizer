@@ -7,9 +7,6 @@ import java.util.List;
 
 public class ABC {
 
-    public ABC() {
-    }
-
     public List<Character> getRU() {
         return RU;
     }
@@ -38,7 +35,6 @@ public class ABC {
                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
-
     private final List<Character> UA = Arrays.asList
 
             ('а', 'б', 'в', 'г', 'ґ', 'д', 'е', 'є', 'ж', 'з', 'и',

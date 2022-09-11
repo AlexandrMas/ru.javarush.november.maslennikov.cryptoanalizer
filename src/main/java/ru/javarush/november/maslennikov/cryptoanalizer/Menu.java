@@ -1,5 +1,6 @@
 package ru.javarush.november.maslennikov.cryptoanalizer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,7 +8,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Menu {
-    static String menu = """
+    private static final String SET_MENU = """
             Enter the number corresponding to the menu item:
             1.  Encrypt the text using the "Caesar cipher" in Russian;
             2.  Encrypt the text using the "Caesar cipher" in English;
@@ -23,140 +24,36 @@ public class Menu {
             12. Decrypt the text in the language suggested by the user, without using a key;
             13. Exit.
             """;
-    static String inNumber = "Enter the number corresponding to the menu item.";
+    private static final String IN_NUMBER = "Enter the number corresponding to the menu item.";
 
-    static String inPathEncrypt = "Enter the path to the file whose text you want to encrypt:";
+    private static final String IN_PATH_ENCRYPT = "Enter the path to the file whose text you want to encrypt:";
 
-    static String inPathDecrypt = "Enter the path to the file whose text you want to decrypt:";
+    private static final String IN_PATH_DECRYPT = "Enter the path to the file whose text you want to decrypt:";
 
-    static String inAbc = "Enter the path to the file with the alphabet";
+    private static final String IN_ABC = "Enter the path to the file with the alphabet";
 
-    static String fallPath = "Incorrect file path has been entered.";
+    private static final String FALL_PATH = "Incorrect file path has been entered.";
 
-    static String inKey = "Enter the key.";
+    private static final String IN_KEY = "Enter the key.";
 
-    static String fallNumber = "The number is entered incorrectly.";
+    private static final String FALL_NUMBER = "The number is entered incorrectly.";
 
-    static String startEncrypt = "File encryption has started.";
+    private static final String DECRYPT_FINISH = "The text is decrypted, written to a file with the name decryptedFile.txt\n";
 
-    static String startDecrypt = "Decryption of the file has begun.";
-
-    static String encryptFinish = "The text is encrypted, written to a file with the name encryptedFile.txt\n";
-
-    static String decryptFinish = "The text is decrypted, written to a file with the name decryptedFile.txt\n";
+    private static final String FILE_IS_EMPTY = "You have specified the path to an empty file";
 
     public Menu() throws IOException {
-        while (true) {
-            System.out.println(menu);
-
-            int menu = Menu.setMenu();
-
-            if (menu == 1) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
-                        new ABC().getRU(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 2) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
-                        new ABC().getEN(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 3) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
-                        new ABC().getUA(), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 4) {
-                Encrypt.encryptCaesar(Menu.settFileEncrypted(),
-                        new ABC().universal(Menu.settAbc()), Menu.setKey());
-                System.out.println(startEncrypt);
-                System.out.println(encryptFinish);
-            }
-
-            if (menu == 5) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
-                        new ABC().getRU(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 6) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
-                        new ABC().getEN(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 7) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
-                        new ABC().getUA(), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-            if (menu == 8) {
-                Decrypt.decryptCaesar(Menu.settFileDecrypted(),
-                        new ABC().universal(Menu.settAbc()), Menu.setKey());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-
-            if (menu == 9) {
-                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getRU());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 10) {
-                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getEN());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-
-            if (menu == 11) {
-                Decrypt.decryptBruteForce(Menu.settFileDecrypted(), new ABC().getUA());
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-            if (menu == 12) {
-                Decrypt.decryptBruteForce(Menu.settFileDecrypted(),
-                        new ABC().universal(Menu.settAbc()));
-                System.out.println(startDecrypt);
-                System.out.println(decryptFinish);
-            }
-            if (menu == 13) {
-                break;
-            }
-        }
+        Menu.setMenu();
     }
-    public static String settAbc() {
+
+    private static String settAbc() {
         Scanner console = new Scanner(System.in);
         String fileText;
         while (true) {
-            System.out.println(inAbc);
+            System.out.println(IN_ABC);
             fileText = console.nextLine();
             if (!Files.isRegularFile(Path.of(fileText))) {
-                System.out.println(fallPath);
-            } else {
-                break;
-            }
-        }
-        return fileText;
-    }
-    public static String settFileEncrypted() {
-        Scanner console = new Scanner(System.in);
-        String fileText;
-        while (true) {
-            System.out.println(inPathEncrypt);
-            fileText = console.nextLine();
-            if (!Files.isRegularFile(Path.of(fileText))) {
-                System.out.println(fallPath);
+                System.out.println(FALL_PATH);
             } else {
                 break;
             }
@@ -164,14 +61,16 @@ public class Menu {
         return fileText;
     }
 
-    public static String settFileDecrypted() {
+    private static String settFileEncrypted() {
         Scanner console = new Scanner(System.in);
         String fileText;
         while (true) {
-            System.out.println(inPathDecrypt);
+            System.out.println(IN_PATH_ENCRYPT);
             fileText = console.nextLine();
             if (!Files.isRegularFile(Path.of(fileText))) {
-                System.out.println(fallPath);
+                System.out.println(FALL_PATH);
+            } else if (new File(fileText).length() == 0) {
+                System.out.println(FILE_IS_EMPTY);
             } else {
                 break;
             }
@@ -179,16 +78,33 @@ public class Menu {
         return fileText;
     }
 
-    public static int setKey() {
+    private static String settFileDecrypted() {
+        Scanner console = new Scanner(System.in);
+        String fileText;
+        while (true) {
+            System.out.println(IN_PATH_DECRYPT);
+            fileText = console.nextLine();
+            if (!Files.isRegularFile(Path.of(fileText))) {
+                System.out.println(FALL_PATH);
+            } else if (new File(fileText).length() == 0) {
+                System.out.println(FILE_IS_EMPTY);
+            } else {
+                break;
+            }
+        }
+        return fileText;
+    }
+
+    private static int setKey() {
         Scanner console = new Scanner(System.in);
         int key;
         while (true) {
-            System.out.println(inKey);
+            System.out.println(IN_KEY);
             String s = console.nextLine();
             if (s.equals("")) {
-                System.out.println(fallNumber);
+                System.out.println(FALL_NUMBER);
             } else if (!Character.isDigit(s.charAt(0))) {
-                System.out.println(fallNumber);
+                System.out.println(FALL_NUMBER);
             } else {
                 key = Integer.parseInt(s);
                 break;
@@ -197,20 +113,83 @@ public class Menu {
         return key;
     }
 
-    public static int setMenu() {
+    private static void setMenu() throws IOException {
+        while (true) {
+            System.out.println(SET_MENU);
+            int menu = Menu.setPositionMenu();
+            if (menu == 1) {
+                new Encrypt().encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getRU(), Menu.setKey());
+            }
+            if (menu == 2) {
+                new Encrypt().encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getEN(), Menu.setKey());
+            }
+            if (menu == 3) {
+                new Encrypt().encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().getUA(), Menu.setKey());
+            }
+            if (menu == 4) {
+                new Encrypt().encryptCaesar(Menu.settFileEncrypted(),
+                        new ABC().universal(Menu.settAbc()), Menu.setKey());
+            }
+            if (menu == 5) {
+                new Decrypt().decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getRU(), Menu.setKey());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 6) {
+                new Decrypt().decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getEN(), Menu.setKey());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 7) {
+                new Decrypt().decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().getUA(), Menu.setKey());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 8) {
+                new Decrypt().decryptCaesar(Menu.settFileDecrypted(),
+                        new ABC().universal(Menu.settAbc()), Menu.setKey());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 9) {
+                new Decrypt().decryptBruteForce(Menu.settFileDecrypted(), new ABC().getRU());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 10) {
+                new Decrypt().decryptBruteForce(Menu.settFileDecrypted(), new ABC().getEN());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 11) {
+                new Decrypt().decryptBruteForce(Menu.settFileDecrypted(), new ABC().getUA());
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 12) {
+                new Decrypt().decryptBruteForce(Menu.settFileDecrypted(),
+                        new ABC().universal(Menu.settAbc()));
+                System.out.println(DECRYPT_FINISH);
+            }
+            if (menu == 13) {
+                break;
+            }
+        }
+    }
+
+    private static int setPositionMenu() {
         Scanner console = new Scanner(System.in);
         int menu;
         while (true) {
             String s = console.nextLine();
             if (s.equals("")) {
-                System.out.println(fallNumber);
-                System.out.println(inNumber);
+                System.out.println(FALL_NUMBER);
+                System.out.println(IN_NUMBER);
             } else if (!Character.isDigit(s.charAt(0))) {
-                System.out.println(fallNumber);
-                System.out.println(inNumber);
+                System.out.println(FALL_NUMBER);
+                System.out.println(IN_NUMBER);
             } else if (Integer.parseInt(s) > 13 && Integer.parseInt(s) > 0) {
-                System.out.println(fallNumber);
-                System.out.println(inNumber);
+                System.out.println(FALL_NUMBER);
+                System.out.println(IN_NUMBER);
             } else {
                 menu = Integer.parseInt(s);
                 break;

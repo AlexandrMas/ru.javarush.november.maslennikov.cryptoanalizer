@@ -5,10 +5,7 @@ import java.util.List;
 
 public class Encrypt {
 
-    private Encrypt() {
-    }
-
-    static void encryptCaesar(String file, List<Character> abc, int key) throws IOException {
+    public void encryptCaesar(String file, List<Character> abc, int key) throws IOException {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter("encryptedFile.txt"))) {
@@ -29,6 +26,7 @@ public class Encrypt {
                 writer.write(lineE + "\n");
             }
         }
+        System.out.println("The text is encrypted, written to a file with the name encryptedFile.txt\n");
     }
 }
 

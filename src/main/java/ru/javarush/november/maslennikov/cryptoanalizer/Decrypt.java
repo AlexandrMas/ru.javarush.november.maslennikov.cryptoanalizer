@@ -6,11 +6,8 @@ import java.util.List;
 
 public class Decrypt {
 
-    private Decrypt() {
-    }
-
-    static void decryptCaesar(String file, List<Character> abc, int key) throws IOException {
-
+    public void decryptCaesar(String file, List<Character> abc, int key)
+            throws IOException {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter("decryptedFile.txt"))) {
@@ -32,14 +29,15 @@ public class Decrypt {
         }
     }
 
-    static void decryptBruteForce(String file, List<Character> abc) throws IOException {
+    public void decryptBruteForce(String file, List<Character> abc)
+            throws IOException {
         int length1;
         int length2;
         int result;
         int key;
 
         for (int i = 0; ; i++) {
-            Decrypt.decryptCaesar(file, abc, i);
+            new Decrypt().decryptCaesar(file, abc, i);
             try (BufferedReader read = new BufferedReader(new FileReader("decryptedFile.txt"));
                  BufferedWriter writer = new BufferedWriter(new FileWriter("temple.txt"))) {
                 String lineE = "";
@@ -58,14 +56,55 @@ public class Decrypt {
                 length2 = arrayString1.length;
             }
             result = length1 + length2;
-            if (result > 5) {
+
+            if (result > 15) {
                 key = i;
+              new  Decrypt().decryptCaesar(file, abc, key);
+                break;
+            } else if (i > 500) {
+                new Decrypt().decryptBruteForceSmallText(file, abc);
                 break;
             }
         }
-        Decrypt.decryptCaesar(file, abc, key);
+    }
+
+    private void decryptBruteForceSmallText(String file, List<Character> abc)
+            throws IOException {
+        int length1;
+        int length2;
+        int result;
+        int key;
+
+        for (int i = 0; ; i++) {
+            new Decrypt().decryptCaesar(file, abc, i);
+            try (BufferedReader read = new BufferedReader(new FileReader("decryptedFile.txt"));
+                 BufferedWriter writer = new BufferedWriter(new FileWriter("temple.txt"))) {
+                String lineE = "";
+                int countString = 30;
+                while (countString > 0 || (lineE = read.readLine()) != null) {
+                    writer.write(lineE);
+                    countString--;
+                }
+            }
+            try (BufferedReader read = new BufferedReader(new FileReader("temple.txt"))) {
+                String readLine = read.readLine();
+                String[] arrayString = readLine.split("\\. ");
+                String line = Arrays.toString(arrayString);
+                String[] arrayString1 = line.split(", ");
+                length1 = arrayString.length;
+                length2 = arrayString1.length;
+            }
+            result = length1 + length2;
+
+            if (result > 5) {
+                key = i;
+                new Decrypt().decryptCaesar(file, abc, key);
+                break;
+            }
+        }
     }
 }
+
 
 
 

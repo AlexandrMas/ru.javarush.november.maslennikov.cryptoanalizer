@@ -1,5 +1,6 @@
-"Изучаем Java" - это не просто книга. Она не только научит вас теории языка Java и объектно-ориентированного
-программирования, она сделает вас программистом. В ее основу положен уникальный метод обучения на практике.
-В отличие от классических учебников информация дается не в текстовом, а в визуальном представлении. Вы освоите
-в деле все самое нужное: синтаксис и концепции языка, работу с потоками, работу в сети, распределенное программирование.
-Вся теория закрепляется интереснейшими примерами и тестами.
+Head First Java is a complete learning experience in Java and object-oriented programming. With this book, you'll
+learn the Java language with a unique method that goes beyond how-to manuals and helps you become a great programmer.
+Through puzzles, mysteries, and soul-searching interviews with famous Java objects, you'll quickly get up to speed on
+Java's fundamentals and advanced topics including lambdas, streams, generics, threading, networking, and the dreaded
+desktop GUI. If you have experience with another programming language, Head First Java will engage your brain with more
+modern approaches to coding–the sleeker, faster, and easier to read, write, and maintain Java of today.
