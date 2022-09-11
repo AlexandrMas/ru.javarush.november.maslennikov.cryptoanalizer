@@ -14,6 +14,8 @@ public class Cryptanalytical {
 //
 //encryptedFile.txt
 //
+//decryptedFile.txt
+//
 //textRu.txt
 //
 //textEn.txt

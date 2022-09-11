@@ -29,6 +29,3 @@ public class Encrypt {
         System.out.println("The text is encrypted, written to a file with the name encryptedFile.txt\n");
     }
 }
-
-
-
