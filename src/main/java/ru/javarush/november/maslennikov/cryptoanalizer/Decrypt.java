@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Decrypt {
 
-    public void decryptCaesar(String file, List<Character> abc, int key)
+    public void decryptCaesarCipher(String file, List<Character> abc, int key)
             throws IOException {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
@@ -37,7 +37,7 @@ public class Decrypt {
         int key;
 
         for (int i = 0; ; i++) {
-            new Decrypt().decryptCaesar(file, abc, i);
+            new Decrypt().decryptCaesarCipher(file, abc, i);
             try (BufferedReader read = new BufferedReader(new FileReader("decryptedFile.txt"));
                  BufferedWriter writer = new BufferedWriter(new FileWriter("temple.txt"))) {
                 String lineE = "";
@@ -59,7 +59,7 @@ public class Decrypt {
 
             if (result > 15) {
                 key = i;
-              new  Decrypt().decryptCaesar(file, abc, key);
+              new  Decrypt().decryptCaesarCipher(file, abc, key);
                 break;
             } else if (i > 500) {
                 new Decrypt().decryptBruteForceSmallText(file, abc);
@@ -76,7 +76,7 @@ public class Decrypt {
         int key;
 
         for (int i = 0; ; i++) {
-            new Decrypt().decryptCaesar(file, abc, i);
+            new Decrypt().decryptCaesarCipher(file, abc, i);
             try (BufferedReader read = new BufferedReader(new FileReader("decryptedFile.txt"));
                  BufferedWriter writer = new BufferedWriter(new FileWriter("temple.txt"))) {
                 String lineE = "";
@@ -98,7 +98,7 @@ public class Decrypt {
 
             if (result > 5) {
                 key = i;
-                new Decrypt().decryptCaesar(file, abc, key);
+                new Decrypt().decryptCaesarCipher(file, abc, key);
                 break;
             }
         }

@@ -45,7 +45,7 @@ public class ABC {
                     'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ю', 'Я',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
 
-    public List<Character> universal(String file) throws IOException {
+    public List<Character> createAbc(String file) throws IOException {
 
         List<Character> abc = new ArrayList<>();
 

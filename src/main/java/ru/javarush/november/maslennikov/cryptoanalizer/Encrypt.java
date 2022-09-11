@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Encrypt {
 
-    public void encryptCaesar(String file, List<Character> abc, int key) throws IOException {
+    public void encryptCaesarCipher(String file, List<Character> abc, int key) throws IOException {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter("encryptedFile.txt"))) {
