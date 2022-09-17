@@ -50,10 +50,10 @@ public class ABC {
         List<Character> abc = new ArrayList<>();
 
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = read.readLine()) != null) {
-                char[] arrayChar = line.toCharArray();
-                for (char c : arrayChar) {
+            String inputString;
+            while ((inputString = read.readLine()) != null) {
+                char[] symbols = inputString.toCharArray();
+                for (char c : symbols) {
                     abc.add(c);
                 }
             }
