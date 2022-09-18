@@ -49,7 +49,6 @@ public class Decoder {
             throw new RuntimeException(e);
         }
         int key = getKey(stringBuilder, abc);
-
         decryptCaesarCipher(file, abc, key);
     }
 
@@ -90,4 +89,3 @@ public class Decoder {
         return checkString;
     }
 }
-
