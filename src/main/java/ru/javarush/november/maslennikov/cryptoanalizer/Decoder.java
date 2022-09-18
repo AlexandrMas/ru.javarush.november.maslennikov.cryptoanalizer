@@ -5,6 +5,12 @@ import java.util.List;
 
 public class Decoder {
 
+    private static final int MATCHES_TO_DECRYPT_BIG_TEXT = 70;
+
+    private static final int MATCHES_TO_DECRYPT_SMALL_TEXT = 40;
+
+    private static final int QUANTITY_OF_ROWS_TO_READ = 20;
+
     public void decryptCaesarCipher(String file, List<Character> abc, int key) {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
@@ -31,97 +37,57 @@ public class Decoder {
     }
 
     public void decryptBruteForce(String file, List<Character> abc) {
-        int key;
         String inputLine;
-        int containsSpase;
-        int containsPointsSpase;
-        int containsVirguleSpase;
-        int resultContains;
-        int matchesToDecryptBigText = 60;
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
-            int quantityOfRowsToRead = 30;
-            while (quantityOfRowsToRead > 0 && (inputLine = read.readLine()) != null) {
+            int reedString = QUANTITY_OF_ROWS_TO_READ;
+            while (reedString > 0 && (inputLine = read.readLine()) != null) {
                 stringBuilder.append(inputLine);
-                quantityOfRowsToRead--;
+                reedString--;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        for (int i = 0; i < abc.size() * 2; i++) {
-            String checkString = stringBuilder.toString();
-            char[] symbols = checkString.toCharArray();
-            int tempKey = i % abc.size();
-            for (int j = 0; j < symbols.length; j++) {
-                char thisChar = symbols[j];
-                if (abc.contains(thisChar)) {
-                    symbols[j] = abc.get((abc.size() + abc.indexOf(thisChar) - tempKey) % abc.size());
-                } else {
-                    symbols[j] = thisChar;
-                }
-            }
-            checkString = new String(symbols);
-            String[] splitStringSpase = checkString.split(" ");
-            String[] splitStringPoints = checkString.split("\\. ");
-            String[] splitStringVirgule = checkString.split(", ");
-            containsSpase = splitStringSpase.length;
-            containsPointsSpase = splitStringPoints.length;
-            containsVirguleSpase = splitStringVirgule.length;
-            resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
-            if (resultContains > matchesToDecryptBigText) {
-                key = i;
-                decryptCaesarCipher(file, abc, key);
-                break;
-            } else if (i > abc.size()) {
-                decryptBruteForceSmallText(file, abc);
-                break;
-            }
-        }
+        int key = getKey(stringBuilder, abc);
+
+        decryptCaesarCipher(file, abc, key);
     }
 
-    private void decryptBruteForceSmallText(String file, List<Character> abc) {
-        int key;
-        String inputLine;
-        int containsSpase;
-        int containsPointsSpase;
-        int containsVirguleSpase;
-        int resultContains;
-        int matchesToDecryptSmallTExt = 40;
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader read = new BufferedReader(new FileReader(file))) {
-            int quantityOfRowsToRead = 20;
-            while (quantityOfRowsToRead > 0 && (inputLine = read.readLine()) != null) {
-                stringBuilder.append(inputLine);
-                quantityOfRowsToRead--;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private static int getKey(StringBuilder stringBuilder, List<Character> abc) {
+        int key = 0;
         for (int i = 0; i < abc.size() * 2; i++) {
-            String checkString = stringBuilder.toString();
-            char[] symbols = checkString.toCharArray();
-            int tempKey = i % abc.size();
-            for (int j = 0; j < symbols.length; j++) {
-                char thisChar = symbols[j];
-                if (abc.contains(thisChar)) {
-                    symbols[j] = abc.get((abc.size() + abc.indexOf(thisChar) - tempKey) % abc.size());
-                } else {
-                    symbols[j] = thisChar;
-                }
-            }
-            checkString = new String(symbols);
+            String checkString = getCheckString(i, stringBuilder, abc);
             String[] splitStringSpase = checkString.split(" ");
             String[] splitStringPoints = checkString.split("\\. ");
             String[] splitStringVirgule = checkString.split(", ");
-            containsPointsSpase = splitStringPoints.length;
-            containsVirguleSpase = splitStringVirgule.length;
-            containsSpase = splitStringSpase.length;
-            resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
-            if (resultContains > matchesToDecryptSmallTExt) {
+            int containsSpase = splitStringSpase.length;
+            int containsPointsSpase = splitStringPoints.length;
+            int containsVirguleSpase = splitStringVirgule.length;
+            int resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
+            if (resultContains > MATCHES_TO_DECRYPT_BIG_TEXT) {
                 key = i;
-                decryptCaesarCipher(file, abc, key);
                 break;
+            } else if (resultContains > MATCHES_TO_DECRYPT_SMALL_TEXT) {
+                key = i;
             }
         }
+        return key;
+    }
+
+    private static String getCheckString(int key, StringBuilder stringBuilder, List<Character> abc) {
+        String checkString = stringBuilder.toString();
+        char[] symbols = checkString.toCharArray();
+        key = key % abc.size();
+        for (int i = 0; i < symbols.length; i++) {
+            char thisChar = symbols[i];
+            if (abc.contains(thisChar)) {
+                symbols[i] = abc.get((abc.size() + abc.indexOf(thisChar) - key) % abc.size());
+            } else {
+                symbols[i] = thisChar;
+            }
+        }
+        checkString = new String(symbols);
+        return checkString;
     }
 }
+
