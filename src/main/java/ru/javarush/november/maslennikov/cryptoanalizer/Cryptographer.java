@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Cryptographer {
 
-    public void encryptCaesarCipher(String file, List<Character> abc, int key){
+    public void encryptCaesarCipher(String file, List<Character> abc, int key) {
         key = key % abc.size();
         try (BufferedReader read = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter(file + "_is_encrypted.txt"))) {
             String inputString;
-            String outputString = "";
+            String outputString;
             while ((inputString = read.readLine()) != null) {
                 char[] symbols = inputString.toCharArray();
                 for (int i = 0; i < symbols.length; i++) {

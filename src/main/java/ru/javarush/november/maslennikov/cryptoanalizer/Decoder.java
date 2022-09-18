@@ -30,13 +30,14 @@ public class Decoder {
         System.out.println("The text is decrypted, written to a file with the name " + file + "_is_decrypted.txt\n");
     }
 
-    public void decryptBruteForce(String file, List<Character> abc) throws IOException {
+    public void decryptBruteForce(String file, List<Character> abc) {
         int key;
         String inputLine;
+        int containsSpase;
         int containsPointsSpase;
         int containsVirguleSpase;
         int resultContains;
-        int matchesToDecryptBigText = 25;
+        int matchesToDecryptBigText = 60;
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
             int quantityOfRowsToRead = 30;
@@ -44,6 +45,8 @@ public class Decoder {
                 stringBuilder.append(inputLine);
                 quantityOfRowsToRead--;
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         for (int i = 0; i < abc.size() * 2; i++) {
             String checkString = stringBuilder.toString();
@@ -58,11 +61,13 @@ public class Decoder {
                 }
             }
             checkString = new String(symbols);
+            String[] splitStringSpase = checkString.split(" ");
             String[] splitStringPoints = checkString.split("\\. ");
             String[] splitStringVirgule = checkString.split(", ");
+            containsSpase = splitStringSpase.length;
             containsPointsSpase = splitStringPoints.length;
             containsVirguleSpase = splitStringVirgule.length;
-            resultContains = containsPointsSpase + containsVirguleSpase;
+            resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
             if (resultContains > matchesToDecryptBigText) {
                 key = i;
                 decryptCaesarCipher(file, abc, key);
@@ -74,20 +79,23 @@ public class Decoder {
         }
     }
 
-    private void decryptBruteForceSmallText(String file, List<Character> abc) throws IOException {
+    private void decryptBruteForceSmallText(String file, List<Character> abc) {
         int key;
         String inputLine;
+        int containsSpase;
         int containsPointsSpase;
         int containsVirguleSpase;
         int resultContains;
-        int matchesToDecryptSmallTExt = 5;
+        int matchesToDecryptSmallTExt = 40;
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
-            int quantityOfRowsToRead = 25;
+            int quantityOfRowsToRead = 20;
             while (quantityOfRowsToRead > 0 && (inputLine = read.readLine()) != null) {
                 stringBuilder.append(inputLine);
                 quantityOfRowsToRead--;
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         for (int i = 0; i < abc.size() * 2; i++) {
             String checkString = stringBuilder.toString();
@@ -102,11 +110,13 @@ public class Decoder {
                 }
             }
             checkString = new String(symbols);
+            String[] splitStringSpase = checkString.split(" ");
             String[] splitStringPoints = checkString.split("\\. ");
             String[] splitStringVirgule = checkString.split(", ");
             containsPointsSpase = splitStringPoints.length;
             containsVirguleSpase = splitStringVirgule.length;
-            resultContains = containsPointsSpase + containsVirguleSpase;
+            containsSpase = splitStringSpase.length;
+            resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
             if (resultContains > matchesToDecryptSmallTExt) {
                 key = i;
                 decryptCaesarCipher(file, abc, key);

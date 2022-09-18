@@ -45,7 +45,7 @@ public class ABC {
                     'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ю', 'Я',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
 
-    public List<Character> createAbc(String file) throws IOException {
+    public List<Character> createAbc(String file) {
 
         List<Character> abc = new ArrayList<>();
 
@@ -57,6 +57,8 @@ public class ABC {
                     abc.add(c);
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return abc;
     }

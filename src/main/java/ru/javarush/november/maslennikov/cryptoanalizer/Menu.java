@@ -26,6 +26,7 @@ public class Menu {
                     "13. Exit.\n");
 
     private static final int SIZE_MENU = LIST_MENU.size();
+
     private static final String START_MENU = "Enter the number corresponding to the menu item:";
 
     private static final String ENTER_NUMBER = "Enter the number corresponding to the menu item.";
