@@ -18,16 +18,16 @@ public class Decoder {
             String inputString;
             String outputString;
             while ((inputString = read.readLine()) != null) {
-                char[] arrayChar = inputString.toCharArray();
-                for (int i = 0; i < arrayChar.length; i++) {
-                    char thisChar = arrayChar[i];
+                char[] symbols = inputString.toCharArray();
+                for (int i = 0; i < symbols.length; i++) {
+                    char thisChar = symbols[i];
                     if (abc.contains(thisChar)) {
-                        arrayChar[i] = abc.get((abc.size() + abc.indexOf(thisChar) - key) % abc.size());
+                        symbols[i] = abc.get((abc.size() + abc.indexOf(thisChar) - key) % abc.size());
                     } else {
-                        arrayChar[i] = thisChar;
+                        symbols[i] = thisChar;
                     }
                 }
-                outputString = new String(arrayChar);
+                outputString = new String(symbols);
                 writer.write(outputString + "\n");
             }
         } catch (IOException e) {

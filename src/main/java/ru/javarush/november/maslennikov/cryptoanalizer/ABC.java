@@ -28,6 +28,7 @@ public class ABC {
                     'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф',
                     'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ъ', 'Ы', 'Ь', 'Э', 'Ю', 'Я',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
+
     private final List<Character> EN = Arrays.asList
 
             ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -35,6 +36,7 @@ public class ABC {
                     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
+
     private final List<Character> UA = Arrays.asList
 
             ('а', 'б', 'в', 'г', 'ґ', 'д', 'е', 'є', 'ж', 'з', 'и',
@@ -46,9 +48,7 @@ public class ABC {
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
 
     public List<Character> createAbc(String file) {
-
         List<Character> abc = new ArrayList<>();
-
         try (BufferedReader read = new BufferedReader(new FileReader(file))) {
             String inputString;
             while ((inputString = read.readLine()) != null) {
