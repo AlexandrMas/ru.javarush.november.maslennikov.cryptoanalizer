@@ -63,7 +63,7 @@ public class Decoder {
             int containsPointsSpase = splitStringPoints.length;
             int containsVirguleSpase = splitStringVirgule.length;
             int resultContains = containsSpase + containsPointsSpase + containsVirguleSpase;
-            if (resultContains > MATCHES_TO_DECRYPT_BIG_TEXT) {
+            if (resultContains > MATCHES_TO_DECRYPT_BIG_TEXT && checkString.contains(", ")) {
                 key = i;
                 break;
             } else if (resultContains > MATCHES_TO_DECRYPT_SMALL_TEXT) {

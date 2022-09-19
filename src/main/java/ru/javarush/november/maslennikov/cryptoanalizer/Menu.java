@@ -1,12 +1,9 @@
 package ru.javarush.november.maslennikov.cryptoanalizer;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Menu {
 
@@ -17,13 +14,11 @@ public class Menu {
                     "4.  Encrypt the text using the \"Caesar cipher\" in the language suggested by the user;",
                     "5.  Decrypt the text in Russian using the \"Caesar cipher\" key;",
                     "6.  Decrypt the text in English using the \"Caesar cipher\" key;",
-                    "7.  Decrypt the text in Ukrainian using the key of the \"Caesar cipher\";",
+                    "7.  Decrypt the text in Ukrainian using the \"Caesar cipher\"key;",
                     "8.  Decrypt the text in the language suggested by the user using the \"Caesar cipher\" key;",
-                    "9.  Decrypt the text in Russian, without using a key;",
-                    "10. Decrypt the text in English, without using a key;",
-                    "11. Decrypt the text in Ukrainian, without using a key;",
-                    "12. Decrypt the text in the language suggested by the user, without using a key;",
-                    "13. Exit.\n");
+                    "9.  Decrypt the text without using a key, only Russian, Ukrainian and English;",
+                    "10. Decrypt the text in the language suggested by the user, without using a key;",
+                    "11. Exit.\n");
 
     private static final int SIZE_MENU = LIST_MENU.size();
 
@@ -45,12 +40,10 @@ public class Menu {
 
     private static final String FILE_IS_EMPTY = "You have specified the path to an empty file";
 
+    private static final int READ_TEST_LINES = 30;
+
     public Menu() {
-        try {
-            settMenu();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        settMenu();
     }
 
     private static void printString(String string) {
@@ -115,7 +108,6 @@ public class Menu {
         return fileText;
     }
 
-
     private static int settKey() {
         Scanner console = new Scanner(System.in);
         int key = 0;
@@ -134,8 +126,7 @@ public class Menu {
         return key;
     }
 
-
-    private void settMenu() throws IOException {
+    private void settMenu() {
         Cryptographer cryptographer = new Cryptographer();
         Decoder decoder = new Decoder();
         ABC abc = new ABC();
@@ -163,21 +154,19 @@ public class Menu {
                 decoder.decryptCaesarCipher(settFileDecrypted(),
                         abc.getEN(), settKey());
             } else if (menu == 7) {
-                decoder.decryptCaesarCipher(Menu.settFileDecrypted(),
+                decoder.decryptCaesarCipher(settFileDecrypted(),
                         abc.getUA(), settKey());
             } else if (menu == 8) {
-                decoder.decryptCaesarCipher(Menu.settFileDecrypted(),
-                        abc.createAbc(settAbc()), Menu.settKey());
+                decoder.decryptCaesarCipher(settFileDecrypted(),
+                        abc.createAbc(settAbc()), settKey());
             } else if (menu == 9) {
-                decoder.decryptBruteForce(settFileDecrypted(), abc.getRU());
+                String file = settFileDecrypted();
+                List<Character> necessaryAbc = toIdentifyAbc(file);
+                decoder.decryptBruteForce(file, necessaryAbc);
             } else if (menu == 10) {
-                decoder.decryptBruteForce(settFileDecrypted(), abc.getEN());
-            } else if (menu == 11) {
-                decoder.decryptBruteForce(settFileDecrypted(), abc.getUA());
-            } else if (menu == 12) {
                 decoder.decryptBruteForce(settFileDecrypted(),
                         abc.createAbc(settAbc()));
-            } else if (menu == 13) {
+            } else if (menu == 11) {
                 sett = true;
             }
         }
@@ -201,5 +190,49 @@ public class Menu {
             }
         }
         return positionMenu;
+    }
+
+    private static List<Character> toIdentifyAbc(String file) {
+        List<Character> ruAbc = new ABC().getRU();
+        List<Character> uaAbc = new ABC().getUA();
+        List<Character> enAbc = new ABC().getEN();
+        Map<List<Character>, Integer> counterCharsAbc = new HashMap<>();
+        counterCharsAbc.put(ruAbc, 0);
+        counterCharsAbc.put(uaAbc, 0);
+        counterCharsAbc.put(enAbc, 0);
+        List<Character> abc = null;
+        String inputLine;
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader read = new BufferedReader(new FileReader(file))) {
+            int reedString = READ_TEST_LINES;
+            while (reedString > 0 && (inputLine = read.readLine()) != null) {
+                stringBuilder.append(inputLine);
+                reedString--;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String checkString = stringBuilder.toString();
+        char[] symbols = checkString.toCharArray();
+        for (char thisSymbol : symbols) {
+            if (ruAbc.contains(thisSymbol)) {
+                counterCharsAbc.put(ruAbc, counterCharsAbc.get(ruAbc) + 1);
+            }
+            if (uaAbc.contains(thisSymbol)) {
+                counterCharsAbc.put(uaAbc, counterCharsAbc.get(uaAbc) + 1);
+            }
+            if (enAbc.contains(thisSymbol)) {
+                counterCharsAbc.put(enAbc, counterCharsAbc.get(enAbc) + 1);
+            }
+        }
+        int determinant = Math.max(counterCharsAbc.get(ruAbc),
+                Math.max(counterCharsAbc.get(uaAbc), counterCharsAbc.get(enAbc)));
+
+        for (Map.Entry<List<Character>, Integer> pair : counterCharsAbc.entrySet()) {
+            if (determinant == pair.getValue()) {
+                abc = pair.getKey();
+            }
+        }
+        return abc;
     }
 }
