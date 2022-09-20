@@ -127,8 +127,7 @@ public class Menu {
     }
 
     private void settMenu() {
-        Cryptographer cryptographer = new Cryptographer();
-        Decoder decoder = new Decoder();
+        Handler operation = new Handler();
         ABC abc = new ABC();
         boolean sett = false;
         while (!sett) {
@@ -136,35 +135,35 @@ public class Menu {
             printMenu();
             int menu = settPositionMenu();
             if (menu == 1) {
-                cryptographer.encryptCaesarCipher(settFileEncrypted(),
+                operation.encryptCaesarCipher(settFileEncrypted(),
                         abc.getRU(), settKey());
             } else if (menu == 2) {
-                cryptographer.encryptCaesarCipher(settFileEncrypted(),
+                operation.encryptCaesarCipher(settFileEncrypted(),
                         abc.getEN(), settKey());
             } else if (menu == 3) {
-                cryptographer.encryptCaesarCipher(settFileEncrypted(),
+                operation.encryptCaesarCipher(settFileEncrypted(),
                         abc.getUA(), settKey());
             } else if (menu == 4) {
-                cryptographer.encryptCaesarCipher(settFileEncrypted(),
+                operation.encryptCaesarCipher(settFileEncrypted(),
                         abc.createAbc(settAbc()), settKey());
             } else if (menu == 5) {
-                decoder.decryptCaesarCipher(settFileDecrypted(),
+                operation.decryptCaesarCipher(settFileDecrypted(),
                         abc.getRU(), settKey());
             } else if (menu == 6) {
-                decoder.decryptCaesarCipher(settFileDecrypted(),
+                operation.decryptCaesarCipher(settFileDecrypted(),
                         abc.getEN(), settKey());
             } else if (menu == 7) {
-                decoder.decryptCaesarCipher(settFileDecrypted(),
+                operation.decryptCaesarCipher(settFileDecrypted(),
                         abc.getUA(), settKey());
             } else if (menu == 8) {
-                decoder.decryptCaesarCipher(settFileDecrypted(),
+                operation.decryptCaesarCipher(settFileDecrypted(),
                         abc.createAbc(settAbc()), settKey());
             } else if (menu == 9) {
                 String file = settFileDecrypted();
                 List<Character> necessaryAbc = toIdentifyAbc(file);
-                decoder.decryptBruteForce(file, necessaryAbc);
+                operation.decryptBruteForce(file, necessaryAbc);
             } else if (menu == 10) {
-                decoder.decryptBruteForce(settFileDecrypted(),
+                operation.decryptBruteForce(settFileDecrypted(),
                         abc.createAbc(settAbc()));
             } else if (menu == 11) {
                 sett = true;
