@@ -30,7 +30,7 @@ public class Menu {
 
     private static final String ENTER_PATH_DECRYPT = "Enter the path to the file whose text you want to decrypt:";
 
-    private static final String ENTER_ABC = "Enter the path to the file with the alphabet";
+    private static final String ENTER_PATH_ALPHABET = "Enter the path to the file with the alphabet";
 
     private static final String FALL_PATH = "Incorrect file path has been entered.";
 
@@ -42,10 +42,6 @@ public class Menu {
 
     private static final int READ_TEST_LINES = 30;
 
-    public Menu() {
-        settMenu();
-    }
-
     private static void printString(String string) {
         System.out.println(string);
     }
@@ -56,56 +52,56 @@ public class Menu {
         }
     }
 
-    private static String settAbc() {
+    private static String settAlphabet() {
         Scanner console = new Scanner(System.in);
-        String fileText = "";
+        String filePath = "";
         boolean sett = false;
         while (!sett) {
-            printString(ENTER_ABC);
-            fileText = console.nextLine();
-            if (!Files.isRegularFile(Path.of(fileText))) {
+            printString(ENTER_PATH_ALPHABET);
+            filePath = console.nextLine();
+            if (!Files.isRegularFile(Path.of(filePath))) {
                 printString(FALL_PATH);
             } else {
                 sett = true;
             }
         }
-        return fileText;
+        return filePath;
     }
 
     private static String settFileEncrypted() {
         Scanner console = new Scanner(System.in);
-        String fileText = "";
+        String filePath = "";
         boolean sett = false;
         while (!sett) {
             printString(ENTER_PATH_ENCRYPT);
-            fileText = console.nextLine();
-            if (!Files.isRegularFile(Path.of(fileText))) {
+            filePath = console.nextLine();
+            if (!Files.isRegularFile(Path.of(filePath))) {
                 printString(FALL_PATH);
-            } else if (new File(fileText).length() == 0) {
+            } else if (new File(filePath).length() == 0) {
                 printString(FILE_IS_EMPTY);
             } else {
                 sett = true;
             }
         }
-        return fileText;
+        return filePath;
     }
 
     private static String settFileDecrypted() {
         Scanner console = new Scanner(System.in);
-        String fileText = "";
+        String filePath = "";
         boolean sett = false;
         while (!sett) {
             printString(ENTER_PATH_DECRYPT);
-            fileText = console.nextLine();
-            if (!Files.isRegularFile(Path.of(fileText))) {
+            filePath = console.nextLine();
+            if (!Files.isRegularFile(Path.of(filePath))) {
                 printString(FALL_PATH);
-            } else if (new File(fileText).length() == 0) {
+            } else if (new File(filePath).length() == 0) {
                 System.out.println(FILE_IS_EMPTY);
             } else {
                 sett = true;
             }
         }
-        return fileText;
+        return filePath;
     }
 
     private static int settKey() {
@@ -114,58 +110,58 @@ public class Menu {
         boolean sett = false;
         while (!sett) {
             printString(ENTER_KEY);
-            String inString = console.nextLine();
-            if (inString.equals("")
-                    || !Character.isDigit(inString.charAt(0))) {
+            String inputString = console.nextLine();
+            if (inputString.equals("")
+                    || !Character.isDigit(inputString.charAt(0))) {
                 printString(FALL_NUMBER);
             } else {
-                key = Integer.parseInt(inString);
+                key = Integer.parseInt(inputString);
                 sett = true;
             }
         }
         return key;
     }
 
-    private void settMenu() {
+    public void settMenu() {
         Handler operation = new Handler();
-        ABC abc = new ABC();
+        Alphabet alphabet = new Alphabet();
         boolean sett = false;
         while (!sett) {
             printString(START_MENU);
             printMenu();
-            int menu = settPositionMenu();
-            if (menu == 1) {
+            int positionMenu = settPositionMenu();
+            if (positionMenu == 1) {
                 operation.encryptCaesarCipher(settFileEncrypted(),
-                        abc.getRU(), settKey());
-            } else if (menu == 2) {
+                        alphabet.getRuAlphabet(), settKey());
+            } else if (positionMenu == 2) {
                 operation.encryptCaesarCipher(settFileEncrypted(),
-                        abc.getEN(), settKey());
-            } else if (menu == 3) {
+                        alphabet.getEnAlphabet(), settKey());
+            } else if (positionMenu == 3) {
                 operation.encryptCaesarCipher(settFileEncrypted(),
-                        abc.getUA(), settKey());
-            } else if (menu == 4) {
+                        alphabet.getUaAlphabet(), settKey());
+            } else if (positionMenu == 4) {
                 operation.encryptCaesarCipher(settFileEncrypted(),
-                        abc.createAbc(settAbc()), settKey());
-            } else if (menu == 5) {
+                        alphabet.createAlphabet(settAlphabet()), settKey());
+            } else if (positionMenu == 5) {
                 operation.decryptCaesarCipher(settFileDecrypted(),
-                        abc.getRU(), settKey());
-            } else if (menu == 6) {
+                        alphabet.getRuAlphabet(), settKey());
+            } else if (positionMenu == 6) {
                 operation.decryptCaesarCipher(settFileDecrypted(),
-                        abc.getEN(), settKey());
-            } else if (menu == 7) {
+                        alphabet.getEnAlphabet(), settKey());
+            } else if (positionMenu == 7) {
                 operation.decryptCaesarCipher(settFileDecrypted(),
-                        abc.getUA(), settKey());
-            } else if (menu == 8) {
+                        alphabet.getUaAlphabet(), settKey());
+            } else if (positionMenu == 8) {
                 operation.decryptCaesarCipher(settFileDecrypted(),
-                        abc.createAbc(settAbc()), settKey());
-            } else if (menu == 9) {
-                String file = settFileDecrypted();
-                List<Character> necessaryAbc = toIdentifyAbc(file);
-                operation.decryptBruteForce(file, necessaryAbc);
-            } else if (menu == 10) {
+                        alphabet.createAlphabet(settAlphabet()), settKey());
+            } else if (positionMenu == 9) {
+                String filePath = settFileDecrypted();
+                List<Character> userAlphabet = toIdentifyAlphabet(filePath);
+                operation.decryptBruteForce(filePath, userAlphabet);
+            } else if (positionMenu == 10) {
                 operation.decryptBruteForce(settFileDecrypted(),
-                        abc.createAbc(settAbc()));
-            } else if (menu == 11) {
+                        alphabet.createAlphabet(settAlphabet()));
+            } else if (positionMenu == 11) {
                 sett = true;
             }
         }
@@ -191,47 +187,47 @@ public class Menu {
         return positionMenu;
     }
 
-    private static List<Character> toIdentifyAbc(String file) {
-        List<Character> ruAbc = new ABC().getRU();
-        List<Character> uaAbc = new ABC().getUA();
-        List<Character> enAbc = new ABC().getEN();
-        Map<List<Character>, Integer> counterCharsAbc = new HashMap<>();
-        counterCharsAbc.put(ruAbc, 0);
-        counterCharsAbc.put(uaAbc, 0);
-        counterCharsAbc.put(enAbc, 0);
-        List<Character> abc = null;
+    private static List<Character> toIdentifyAlphabet(String filePath) {
+        List<Character> ruAlphabet = new Alphabet().getRuAlphabet();
+        List<Character> uaAlphabet = new Alphabet().getUaAlphabet();
+        List<Character> enAlphabet = new Alphabet().getEnAlphabet();
+        Map<List<Character>, Integer> counterCharsAlphabet = new HashMap<>();
+        counterCharsAlphabet.put(ruAlphabet, 0);
+        counterCharsAlphabet.put(uaAlphabet, 0);
+        counterCharsAlphabet.put(enAlphabet, 0);
+        List<Character> alphabet = null;
         String inputLine;
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader read = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader read = new BufferedReader(new FileReader(filePath))) {
             int reedString = READ_TEST_LINES;
             while (reedString > 0 && (inputLine = read.readLine()) != null) {
                 stringBuilder.append(inputLine);
                 reedString--;
             }
+            String checkString = stringBuilder.toString();
+            char[] symbols = checkString.toCharArray();
+            for (char thisSymbol : symbols) {
+                if (ruAlphabet.contains(thisSymbol)) {
+                    counterCharsAlphabet.put(ruAlphabet, counterCharsAlphabet.get(ruAlphabet) + 1);
+                }
+                if (uaAlphabet.contains(thisSymbol)) {
+                    counterCharsAlphabet.put(uaAlphabet, counterCharsAlphabet.get(uaAlphabet) + 1);
+                }
+                if (enAlphabet.contains(thisSymbol)) {
+                    counterCharsAlphabet.put(enAlphabet, counterCharsAlphabet.get(enAlphabet) + 1);
+                }
+            }
+            int determinant = Math.max(counterCharsAlphabet.get(ruAlphabet),
+                    Math.max(counterCharsAlphabet.get(uaAlphabet), counterCharsAlphabet.get(enAlphabet)));
+
+            for (Map.Entry<List<Character>, Integer> pair : counterCharsAlphabet.entrySet()) {
+                if (determinant == pair.getValue()) {
+                    alphabet = pair.getKey();
+                }
+            }
+            return alphabet;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String checkString = stringBuilder.toString();
-        char[] symbols = checkString.toCharArray();
-        for (char thisSymbol : symbols) {
-            if (ruAbc.contains(thisSymbol)) {
-                counterCharsAbc.put(ruAbc, counterCharsAbc.get(ruAbc) + 1);
-            }
-            if (uaAbc.contains(thisSymbol)) {
-                counterCharsAbc.put(uaAbc, counterCharsAbc.get(uaAbc) + 1);
-            }
-            if (enAbc.contains(thisSymbol)) {
-                counterCharsAbc.put(enAbc, counterCharsAbc.get(enAbc) + 1);
-            }
-        }
-        int determinant = Math.max(counterCharsAbc.get(ruAbc),
-                Math.max(counterCharsAbc.get(uaAbc), counterCharsAbc.get(enAbc)));
-
-        for (Map.Entry<List<Character>, Integer> pair : counterCharsAbc.entrySet()) {
-            if (determinant == pair.getValue()) {
-                abc = pair.getKey();
-            }
-        }
-        return abc;
     }
 }
