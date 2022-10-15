@@ -11,24 +11,35 @@ public class Handler {
 
     private static final int MULTIPLIER_FOR_BRUTE_FORCE = -1;
 
-    private static final String DECRYPT = "decrypted";
+    private static void printInformation(String filePath, String fileProcessed, String newFileNAme) {
+        System.out.println("The text is "
+                + fileProcessed + ", written to a file with the name "
+                + filePath + newFileNAme + "\n");
+    }
 
-    private static final String ENCRYPT = "encrypted";
+    private static String setNameProcessed(int key) {
+        String fileProcessed;
+        if (key >= 0) {
+            fileProcessed = "encrypted";
+        } else {
+            fileProcessed = "decrypted";
+        }
+        return fileProcessed;
+    }
 
-    private static final String NEW_NAME_DECRYPTED = "_is_decrypted.txt";
-
-    private static final String NEW_NAME_ENCRYPTED = "_is_encrypted.txt";
+    private static String setFileName(int key) {
+        String newFileNAme;
+        if (key >= 0) {
+            newFileNAme = "_is_encrypted.txt";
+        } else {
+            newFileNAme = "_is_decrypted.txt";
+        }
+        return newFileNAme;
+    }
 
     public void encryptCaesarCipher(String filePath, List<Character> alphabet, int key) {
-        String fileProcessed;
-        String newFileNAme;
-        if (key > 0) {
-            fileProcessed = ENCRYPT;
-            newFileNAme = NEW_NAME_ENCRYPTED;
-        } else {
-            fileProcessed = DECRYPT;
-            newFileNAme = NEW_NAME_DECRYPTED;
-        }
+        String fileProcessed = setNameProcessed(key);
+        String newFileNAme = setFileName(key);
         key = key % alphabet.size();
         try (BufferedReader read = new BufferedReader(new FileReader(filePath));
              BufferedWriter writer = new BufferedWriter(new FileWriter(filePath + newFileNAme))) {
@@ -37,7 +48,7 @@ public class Handler {
                 String outputString = getOutputString(key, inputString, alphabet);
                 writer.write(outputString + "\n");
             }
-            System.out.println("The text is " + fileProcessed + ", written to a file with the name " + filePath + newFileNAme + "\n");
+            printInformation(filePath, fileProcessed, newFileNAme);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
