@@ -20,6 +20,8 @@ public class Menu {
                     "10. Decrypt the text in the language suggested by the user, without using a key;",
                     "11. Exit.\n");
 
+    private static final List<Integer> POSITION_MENU_ENCRYPT = Arrays.asList(1, 2, 3, 4);
+
     private static final int SIZE_MENU = LIST_MENU.size();
 
     private static final String START_MENU = "Enter the number corresponding to the menu item:";
@@ -50,46 +52,38 @@ public class Menu {
         }
     }
 
-    private static String settAlphabet() {
+    private static int settPositionMenu() {
         Scanner console = new Scanner(System.in);
-        String filePath = "";
+        int positionMenu = 0;
         boolean sett = false;
         while (!sett) {
-            printString(ENTER_PATH_ALPHABET);
-            filePath = console.nextLine();
-            if (!Files.isRegularFile(Path.of(filePath))) {
-                printString(FALL_PATH);
+            String inputString = console.nextLine();
+            if (inputString.equals("")
+                    || !Character.isDigit(inputString.charAt(0))
+                    || Integer.parseInt(inputString) > SIZE_MENU
+                    || Integer.parseInt(inputString) <= 0) {
+                printString(FALL_NUMBER);
+                printString(ENTER_NUMBER);
             } else {
+                positionMenu = Integer.parseInt(inputString);
                 sett = true;
             }
         }
-        return filePath;
+        return positionMenu;
     }
 
-    private static String settFileEncrypted() {
-        Scanner console = new Scanner(System.in);
-        String filePath = "";
-        boolean sett = false;
-        while (!sett) {
-            printString(ENTER_PATH_ENCRYPT);
-            filePath = console.nextLine();
-            if (!Files.isRegularFile(Path.of(filePath))) {
-                printString(FALL_PATH);
-            } else if (new File(filePath).length() == 0) {
-                printString(FILE_IS_EMPTY);
-            } else {
-                sett = true;
-            }
+    private static String settFilePath(int positionMenu) {
+        String nameOperation;
+        if (POSITION_MENU_ENCRYPT.contains(positionMenu)) {
+            nameOperation = ENTER_PATH_ENCRYPT;
+        } else {
+            nameOperation = ENTER_PATH_DECRYPT;
         }
-        return filePath;
-    }
-
-    private static String settFileDecrypted() {
         Scanner console = new Scanner(System.in);
         String filePath = "";
         boolean sett = false;
         while (!sett) {
-            printString(ENTER_PATH_DECRYPT);
+            printString(nameOperation);
             filePath = console.nextLine();
             if (!Files.isRegularFile(Path.of(filePath))) {
                 printString(FALL_PATH);
@@ -120,6 +114,22 @@ public class Menu {
         return key;
     }
 
+    private static String settAlphabet() {
+        Scanner console = new Scanner(System.in);
+        String filePath = "";
+        boolean sett = false;
+        while (!sett) {
+            printString(ENTER_PATH_ALPHABET);
+            filePath = console.nextLine();
+            if (!Files.isRegularFile(Path.of(filePath))) {
+                printString(FALL_PATH);
+            } else {
+                sett = true;
+            }
+        }
+        return filePath;
+    }
+
     public void startMenu() {
         Handler operation = new Handler();
         Alphabet alphabet = new Alphabet();
@@ -130,44 +140,44 @@ public class Menu {
             int positionMenu = settPositionMenu();
             switch (positionMenu) {
                 case 1:
-                    operation.encryptCaesarCipher(settFileEncrypted(),
+                    operation.encryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getRuAlphabet(), settKey());
                     break;
                 case 2:
-                    operation.encryptCaesarCipher(settFileEncrypted(),
+                    operation.encryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getEnAlphabet(), settKey());
                     break;
                 case 3:
-                    operation.encryptCaesarCipher(settFileEncrypted(),
+                    operation.encryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getUaAlphabet(), settKey());
                     break;
                 case 4:
-                    operation.encryptCaesarCipher(settFileEncrypted(),
+                    operation.encryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.createAlphabet(settAlphabet()), settKey());
                     break;
                 case 5:
-                    operation.decryptCaesarCipher(settFileDecrypted(),
+                    operation.decryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getRuAlphabet(), settKey());
                     break;
                 case 6:
-                    operation.decryptCaesarCipher(settFileDecrypted(),
+                    operation.decryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getEnAlphabet(), settKey());
                     break;
                 case 7:
-                    operation.decryptCaesarCipher(settFileDecrypted(),
+                    operation.decryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.getUaAlphabet(), settKey());
                     break;
                 case 8:
-                    operation.decryptCaesarCipher(settFileDecrypted(),
+                    operation.decryptCaesarCipher(settFilePath(positionMenu),
                             alphabet.createAlphabet(settAlphabet()), settKey());
                     break;
                 case 9:
-                    String filePath = settFileDecrypted();
+                    String filePath = settFilePath(positionMenu);
                     List<Character> userAlphabet = alphabet.toIdentifyAlphabet(filePath);
                     operation.decryptBruteForce(filePath, userAlphabet);
                     break;
                 case 10:
-                    operation.decryptBruteForce(settFileDecrypted(),
+                    operation.decryptBruteForce(settFilePath(positionMenu),
                             alphabet.createAlphabet(settAlphabet()));
                     break;
                 case 11:
@@ -177,25 +187,5 @@ public class Menu {
                     printString(START_MENU);
             }
         }
-    }
-
-    private static int settPositionMenu() {
-        Scanner console = new Scanner(System.in);
-        int positionMenu = 0;
-        boolean sett = false;
-        while (!sett) {
-            String inputString = console.nextLine();
-            if (inputString.equals("")
-                    || !Character.isDigit(inputString.charAt(0))
-                    || Integer.parseInt(inputString) > SIZE_MENU
-                    || Integer.parseInt(inputString) <= 0) {
-                printString(FALL_NUMBER);
-                printString(ENTER_NUMBER);
-            } else {
-                positionMenu = Integer.parseInt(inputString);
-                sett = true;
-            }
-        }
-        return positionMenu;
     }
 }
