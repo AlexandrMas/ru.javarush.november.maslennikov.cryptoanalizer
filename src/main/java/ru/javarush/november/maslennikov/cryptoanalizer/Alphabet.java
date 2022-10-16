@@ -1,9 +1,9 @@
 package ru.javarush.november.maslennikov.cryptoanalizer;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Alphabet {
 
@@ -44,19 +44,55 @@ public class Alphabet {
                     'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Ь', 'Ю', 'Я',
                     '(', '.', ',', '”', ':', '-', '!', '?', ' ', ')');
 
-    public List<Character> createAlphabet(String filePath) {
+    List<Character> createAlphabet(String filePath) {
         List<Character> alphabet = new ArrayList<>();
+        String inputString;
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader read = new BufferedReader(new FileReader(filePath))) {
-            String inputString;
             while ((inputString = read.readLine()) != null) {
-                char[] symbols = inputString.toCharArray();
-                for (char symbol : symbols) {
-                    alphabet.add(symbol);
-                }
+                stringBuilder.append(inputString);
+            }
+            char[] symbols = stringBuilder.toString().toCharArray();
+            for (char symbol : symbols) {
+                alphabet.add(symbol);
             }
             return alphabet;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    List<Character> toIdentifyAlphabet(String filePath) {
+        Map<List<Character>, Integer> statistic = getStatisticOfAlphabet(filePath);
+        int determinant = Math.max(statistic.get(getRuAlphabet()),
+                Math.max(statistic.get(getUaAlphabet()), statistic.get(getEnAlphabet())));
+        List<Character> alphabet = null;
+        for (Map.Entry<List<Character>, Integer> pair : statistic.entrySet()) {
+            if (determinant == pair.getValue()) {
+                alphabet = pair.getKey();
+            }
+        }
+        return alphabet;
+    }
+
+    @NotNull
+    private Map<List<Character>, Integer> getStatisticOfAlphabet(String filePath) {
+        Map<List<Character>, Integer> statistic = new HashMap<>();
+        statistic.put(getRuAlphabet(), 0);
+        statistic.put(getUaAlphabet(), 0);
+        statistic.put(getEnAlphabet(), 0);
+        char[] symbols = Handler.getTestString(filePath).toCharArray();
+        for (char thisSymbol : symbols) {
+            if (getRuAlphabet().contains(thisSymbol)) {
+                statistic.put(getRuAlphabet(), statistic.get(getRuAlphabet()) + 1);
+            }
+            if (getUaAlphabet().contains(thisSymbol)) {
+                statistic.put(getUaAlphabet(), statistic.get(getUaAlphabet()) + 1);
+            }
+            if (getEnAlphabet().contains(thisSymbol)) {
+                statistic.put(getEnAlphabet(), statistic.get(getEnAlphabet()) + 1);
+            }
+        }
+        return statistic;
     }
 }

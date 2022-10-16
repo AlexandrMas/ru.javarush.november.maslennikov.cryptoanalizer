@@ -1,15 +1,17 @@
 package ru.javarush.november.maslennikov.cryptoanalizer;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
 import java.util.List;
 
 public class Handler {
 
-    private static final int QUANTITY_OF_ROWS_TO_READ = 20;
+    private static final int REED_TEST_LINES = 30;
 
     private static final int MAX_CHARS_IN_WORD = 30;
 
-    private static final int MULTIPLIER_FOR_BRUTE_FORCE = -1;
+    private static final int MULTIPLIER_FOR_DECRYPT = -1;
 
     private static void printInformation(String filePath, String fileProcessed, String newFileNAme) {
         System.out.println("The text is "
@@ -40,13 +42,12 @@ public class Handler {
     public void encryptCaesarCipher(String filePath, List<Character> alphabet, int key) {
         String fileProcessed = setNameProcessed(key);
         String newFileNAme = setFileName(key);
+        String inputString;
         key = key % alphabet.size();
         try (BufferedReader read = new BufferedReader(new FileReader(filePath));
              BufferedWriter writer = new BufferedWriter(new FileWriter(filePath + newFileNAme))) {
-            String inputString;
             while ((inputString = read.readLine()) != null) {
-                String outputString = getOutputString(key, inputString, alphabet);
-                writer.write(outputString + "\n");
+                writer.write(getOutputString(key, inputString, alphabet) + "\n");
             }
             printInformation(filePath, fileProcessed, newFileNAme);
         } catch (IOException e) {
@@ -55,21 +56,26 @@ public class Handler {
     }
 
     public void decryptCaesarCipher(String filePath, List<Character> alphabet, int key) {
-        encryptCaesarCipher(filePath, alphabet, key * MULTIPLIER_FOR_BRUTE_FORCE);
+        encryptCaesarCipher(filePath, alphabet, key * MULTIPLIER_FOR_DECRYPT);
     }
 
     public void decryptBruteForce(String filePath, List<Character> alphabet) {
+        String testString = getTestString(filePath);
+        int key = getKeyForBruteForce(testString, alphabet);
+        decryptCaesarCipher(filePath, alphabet, key);
+    }
+
+    @NotNull
+    static String getTestString(String filePath) {
+        int reedString = REED_TEST_LINES;
         String inputString;
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader read = new BufferedReader(new FileReader(filePath))) {
-            int reedString = QUANTITY_OF_ROWS_TO_READ;
             while (reedString > 0 && (inputString = read.readLine()) != null) {
-                stringBuilder.append(inputString).append("\n");
+                stringBuilder.append(inputString).append(" ");
                 reedString--;
             }
-            String outputString = stringBuilder.toString();
-            int key = getKeyForBruteForce(outputString, alphabet);
-            decryptCaesarCipher(filePath, alphabet, key);
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +85,7 @@ public class Handler {
         int key = 0;
         for (int i = 0; i < alphabet.size(); i++) {
             int wordLength = 0;
-            String checkString = getOutputString(i * MULTIPLIER_FOR_BRUTE_FORCE, outputString, alphabet);
+            String  checkString = getOutputString(i * MULTIPLIER_FOR_DECRYPT, outputString, alphabet);
             String[] splitStringSpase = checkString.split(" ");
             for (String checkWord : splitStringSpase) {
                 wordLength = Math.max(checkWord.length(), wordLength);
@@ -103,7 +109,6 @@ public class Handler {
                 symbols[i] = thisChar;
             }
         }
-        inputString = new String(symbols);
-        return inputString;
+        return new String(symbols);
     }
 }

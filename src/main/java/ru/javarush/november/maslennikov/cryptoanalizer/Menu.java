@@ -40,8 +40,6 @@ public class Menu {
 
     private static final String FILE_IS_EMPTY = "You have specified the path to an empty file";
 
-    private static final int READ_TEST_LINES = 30;
-
     private static void printString(String string) {
         System.out.println(string);
     }
@@ -122,7 +120,7 @@ public class Menu {
         return key;
     }
 
-    public void settMenu() {
+    public void startMenu() {
         Handler operation = new Handler();
         Alphabet alphabet = new Alphabet();
         boolean sett = false;
@@ -130,39 +128,53 @@ public class Menu {
             printString(START_MENU);
             printMenu();
             int positionMenu = settPositionMenu();
-            if (positionMenu == 1) {
-                operation.encryptCaesarCipher(settFileEncrypted(),
-                        alphabet.getRuAlphabet(), settKey());
-            } else if (positionMenu == 2) {
-                operation.encryptCaesarCipher(settFileEncrypted(),
-                        alphabet.getEnAlphabet(), settKey());
-            } else if (positionMenu == 3) {
-                operation.encryptCaesarCipher(settFileEncrypted(),
-                        alphabet.getUaAlphabet(), settKey());
-            } else if (positionMenu == 4) {
-                operation.encryptCaesarCipher(settFileEncrypted(),
-                        alphabet.createAlphabet(settAlphabet()), settKey());
-            } else if (positionMenu == 5) {
-                operation.decryptCaesarCipher(settFileDecrypted(),
-                        alphabet.getRuAlphabet(), settKey());
-            } else if (positionMenu == 6) {
-                operation.decryptCaesarCipher(settFileDecrypted(),
-                        alphabet.getEnAlphabet(), settKey());
-            } else if (positionMenu == 7) {
-                operation.decryptCaesarCipher(settFileDecrypted(),
-                        alphabet.getUaAlphabet(), settKey());
-            } else if (positionMenu == 8) {
-                operation.decryptCaesarCipher(settFileDecrypted(),
-                        alphabet.createAlphabet(settAlphabet()), settKey());
-            } else if (positionMenu == 9) {
-                String filePath = settFileDecrypted();
-                List<Character> userAlphabet = toIdentifyAlphabet(filePath);
-                operation.decryptBruteForce(filePath, userAlphabet);
-            } else if (positionMenu == 10) {
-                operation.decryptBruteForce(settFileDecrypted(),
-                        alphabet.createAlphabet(settAlphabet()));
-            } else if (positionMenu == 11) {
-                sett = true;
+            switch (positionMenu) {
+                case 1:
+                    operation.encryptCaesarCipher(settFileEncrypted(),
+                            alphabet.getRuAlphabet(), settKey());
+                    break;
+                case 2:
+                    operation.encryptCaesarCipher(settFileEncrypted(),
+                            alphabet.getEnAlphabet(), settKey());
+                    break;
+                case 3:
+                    operation.encryptCaesarCipher(settFileEncrypted(),
+                            alphabet.getUaAlphabet(), settKey());
+                    break;
+                case 4:
+                    operation.encryptCaesarCipher(settFileEncrypted(),
+                            alphabet.createAlphabet(settAlphabet()), settKey());
+                    break;
+                case 5:
+                    operation.decryptCaesarCipher(settFileDecrypted(),
+                            alphabet.getRuAlphabet(), settKey());
+                    break;
+                case 6:
+                    operation.decryptCaesarCipher(settFileDecrypted(),
+                            alphabet.getEnAlphabet(), settKey());
+                    break;
+                case 7:
+                    operation.decryptCaesarCipher(settFileDecrypted(),
+                            alphabet.getUaAlphabet(), settKey());
+                    break;
+                case 8:
+                    operation.decryptCaesarCipher(settFileDecrypted(),
+                            alphabet.createAlphabet(settAlphabet()), settKey());
+                    break;
+                case 9:
+                    String filePath = settFileDecrypted();
+                    List<Character> userAlphabet = alphabet.toIdentifyAlphabet(filePath);
+                    operation.decryptBruteForce(filePath, userAlphabet);
+                    break;
+                case 10:
+                    operation.decryptBruteForce(settFileDecrypted(),
+                            alphabet.createAlphabet(settAlphabet()));
+                    break;
+                case 11:
+                    sett = true;
+                    break;
+                default:
+                    printString(START_MENU);
             }
         }
     }
@@ -185,49 +197,5 @@ public class Menu {
             }
         }
         return positionMenu;
-    }
-
-    private static List<Character> toIdentifyAlphabet(String filePath) {
-        List<Character> ruAlphabet = new Alphabet().getRuAlphabet();
-        List<Character> uaAlphabet = new Alphabet().getUaAlphabet();
-        List<Character> enAlphabet = new Alphabet().getEnAlphabet();
-        Map<List<Character>, Integer> counterCharsAlphabet = new HashMap<>();
-        counterCharsAlphabet.put(ruAlphabet, 0);
-        counterCharsAlphabet.put(uaAlphabet, 0);
-        counterCharsAlphabet.put(enAlphabet, 0);
-        List<Character> alphabet = null;
-        String inputLine;
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader read = new BufferedReader(new FileReader(filePath))) {
-            int reedString = READ_TEST_LINES;
-            while (reedString > 0 && (inputLine = read.readLine()) != null) {
-                stringBuilder.append(inputLine);
-                reedString--;
-            }
-            String checkString = stringBuilder.toString();
-            char[] symbols = checkString.toCharArray();
-            for (char thisSymbol : symbols) {
-                if (ruAlphabet.contains(thisSymbol)) {
-                    counterCharsAlphabet.put(ruAlphabet, counterCharsAlphabet.get(ruAlphabet) + 1);
-                }
-                if (uaAlphabet.contains(thisSymbol)) {
-                    counterCharsAlphabet.put(uaAlphabet, counterCharsAlphabet.get(uaAlphabet) + 1);
-                }
-                if (enAlphabet.contains(thisSymbol)) {
-                    counterCharsAlphabet.put(enAlphabet, counterCharsAlphabet.get(enAlphabet) + 1);
-                }
-            }
-            int determinant = Math.max(counterCharsAlphabet.get(ruAlphabet),
-                    Math.max(counterCharsAlphabet.get(uaAlphabet), counterCharsAlphabet.get(enAlphabet)));
-
-            for (Map.Entry<List<Character>, Integer> pair : counterCharsAlphabet.entrySet()) {
-                if (determinant == pair.getValue()) {
-                    alphabet = pair.getKey();
-                }
-            }
-            return alphabet;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
